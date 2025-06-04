@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f8f9fa; padding: 20px; color: #333;">
+    <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; padding: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+        <h2 style="color: #2c3e50;">Hello {{ customer_name }},</h2>
+        
+        <p>{{order_message}}</p>
+
+        <h3 style="margin-top: 30px;">Order Details:</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td><strong>Product ID:</strong></td>
+                <td>{{ order_id }}</td>
+            </tr>
+            <tr>
+                <td><strong>Product Name:</strong></td>
+                <td>{{ product_name }}</td>
+            </tr>
+            <tr>
+                <td><strong>Price:</strong></td>
+                <td>₹{{ price }}</td>
+            </tr>
+            <tr>
+                <td><strong>Status:</strong></td>
+                <td>{{ status|title }}</td>
+            </tr>
+        </table>
+
+       
+
+        <p style="margin-top: 40px;">Thank you for shopping with us!<br>
+        <strong>Team Kart</strong></p>
+    </div>
+</body>
+</html>
