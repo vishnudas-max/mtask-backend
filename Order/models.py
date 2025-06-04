@@ -18,7 +18,8 @@ class Order(models.Model):
     status = models.CharField(
         max_length=20,
         choices=ORDER_STATUS_CHOICES,
-        default='received',
+        null=True,
+        blank=True,
         help_text='Current status of the order'
     )
 

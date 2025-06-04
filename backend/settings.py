@@ -149,3 +149,18 @@ CELERY_BROKER_URL = config('CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')
 # set the celery timezone
 CELERY_TIMEZONE = config('CELERY_TIMEZONE')
+
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    'check-emails-every-minute': {
+        'task': 'Order.tasks.run_email_checker',
+        'schedule': crontab(minute='*/1'),
+    },
+}
+
+TOGETHER_API_KEY=config('TOGETHER_API_KEY')
+EMAIL_USERNAME=config('EMAIL_USERNAME')
+EMAIL_PASSWORD=config('EMAIL_PASSWORD')
+
