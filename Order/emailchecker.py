@@ -26,6 +26,13 @@ def update_order_status(result):
         if old_status == new_status:
             print("Status already updated")
             return
+        
+        if new_status == 'cancelled' and old_status != 'delivered':
+            order.status = new_status
+            order.save(update_fields=['status'])
+            print(f"Order cancelled")
+            send_notifications(order.order_id, new_status)
+            return
 
         # Define the valid transitions and the next signal to send
         status_flow = {
@@ -36,7 +43,7 @@ def update_order_status(result):
         }
 
         # Final statuses (no further signals)
-        final_statuses = ['delivered', 'cancelled']
+        final_statuses = ['cancelled']
 
         if old_status in status_flow:
             expected_status, next_signal = status_flow[old_status]
@@ -56,12 +63,13 @@ def update_order_status(result):
                 return
 
         # If status already at final state or outside defined flow
-        if new_status in final_statuses:
+        if new_status in final_statuses and new_status!= old_status:
             order.status = new_status
             order.save(update_fields=['status'])
             print('sending notification')
             send_notifications(order.order_id,new_status)
             print(f"Final status '{new_status}' set without sending signal")
+            return
         else:
             print(f"Unhandled transition: {old_status} -> {new_status}")
 
