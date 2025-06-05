@@ -4,13 +4,16 @@ from django.dispatch import receiver,Signal
 from django.template.loader import render_to_string
 from .models import Order  # Make sure you import your model
 from .tasks import send_mail
-
+from notification.utils import send_notfication_to_add_data
 
 status_updated= Signal()
 
 @receiver(post_save, sender=Order)
 def handle_order_creation(sender, instance, created, **kwargs):
     if created:
+        # sending tringer funtion call so that a websocket message will triger    
+       
+        send_notfication_to_add_data(instance.order_id,instance.customer_name,instance.product_name,instance.price)
         msg = f"""
         Hello {instance.customer_name},
 
@@ -42,6 +45,7 @@ def handle_order_creation(sender, instance, created, **kwargs):
 
         #sending mail in background
         send_mail.delay(subject,text_content,html_content)
+        
 
 
 @receiver(status_updated)

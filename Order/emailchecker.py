@@ -5,6 +5,7 @@ from itertools import chain
 from together import Together
 from django.conf import settings
 from django.utils.timezone import now
+from notification.utils import send_notifications
 
 
 from Order.models import Order
@@ -44,6 +45,7 @@ def update_order_status(result):
                 order.status = new_status
                 order.save(update_fields=['status'])
                 print(f"Status updated to {new_status}")
+                send_notifications(order.order_id,new_status)
 
                 if next_signal:
                     status_updated.send(sender=Order, instance=order, new_status=next_signal)
@@ -57,6 +59,8 @@ def update_order_status(result):
         if new_status in final_statuses:
             order.status = new_status
             order.save(update_fields=['status'])
+            print('sending notification')
+            send_notifications(order.order_id,new_status)
             print(f"Final status '{new_status}' set without sending signal")
         else:
             print(f"Unhandled transition: {old_status} -> {new_status}")
